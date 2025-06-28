@@ -131,6 +131,7 @@ class Parser:
 
 if __name__ == "__main__":
     df = pd.read_excel("documents.xlsx")
+    df = df.head(10)
     total = len(df)
     print(f"Starting parsing {total} documents...")
     for idx, row in df.iterrows():
