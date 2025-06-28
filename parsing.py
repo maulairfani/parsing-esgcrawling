@@ -63,10 +63,10 @@ class Parser:
     def parse_single_page(input_doc_path: str) -> str:
         """Run OCR and conversion on single-page PDF and return Markdown text."""
         pipeline_opts = PdfPipelineOptions()
-        pipeline_opts.do_ocr = True
+        pipeline_opts.do_ocr = False
         pipeline_opts.do_table_structure = True
         pipeline_opts.table_structure_options.do_cell_matching = True
-        pipeline_opts.ocr_options.lang = Parser.OCR_LANG
+        # pipeline_opts.ocr_options.lang = Parser.OCR_LANG
         converter = DocumentConverter(
             format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_opts)}
         )
