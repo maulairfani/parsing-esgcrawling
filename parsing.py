@@ -142,7 +142,7 @@ if __name__ == "__main__":
         source = row["source"]
         doc_id = str(row["doc_id"])
         testing = True
-        print(f"[{idx+1}/{total}] Processing doc_id={doc_id}...", end=" ")
+        print(f"[{idx+1}/{total}] Processing doc_id={doc_id}...")
         try:
             Parser.parse(source, doc_id, testing=testing)
             print("Done")

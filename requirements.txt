@@ -1,0 +1,6 @@
+requests
+pypdf
+google-cloud-storage
+python-dotenv
+pandas
+docling
