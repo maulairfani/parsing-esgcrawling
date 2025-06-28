@@ -20,7 +20,6 @@ load_dotenv()
 
 class Parser:
     DEFAULT_BUCKET = os.getenv("DEFAULT_BUCKET", "cesgs-dart")
-    OCR_LANG = os.getenv("OCR_LANGUAGES", "id").split(",")
 
     @staticmethod
     def _download_pdf(url: str) -> str:
@@ -66,7 +65,6 @@ class Parser:
         pipeline_opts.do_ocr = False
         pipeline_opts.do_table_structure = True
         pipeline_opts.table_structure_options.do_cell_matching = True
-        # pipeline_opts.ocr_options.lang = Parser.OCR_LANG
         converter = DocumentConverter(
             format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_opts)}
         )
@@ -96,7 +94,7 @@ class Parser:
         if num_pages is None:
             raise ValueError(f"Could not read PDF at {local_pdf}")
 
-        limit = min(num_pages, 5) if testing else num_pages
+        limit = min(num_pages, 10) if testing else num_pages
         parsed = []
         for page_number in range(1, limit + 1):
             # ← Tambahkan baris berikut untuk progress per halaman
@@ -131,7 +129,7 @@ class Parser:
 
 if __name__ == "__main__":
     df = pd.read_excel("documents.xlsx")
-    df = df.head(10)
+    df = df.head(1)
     total = len(df)
     print(f"Starting parsing {total} documents...")
     for idx, row in df.iterrows():
