@@ -104,6 +104,10 @@ class Parser:
         limit = min(num_pages, 5) if testing else num_pages
         parsed = []
         for page_number in range(1, limit + 1):
+            # ← Tambahkan baris berikut untuk progress per halaman
+            print(f"Parsing page {page_number}/{limit} of doc_id={doc_id}...", end=" ")
+
+            # ekstrak halaman ke file sementara
             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as page_file:
                 page_path = page_file.name
             Parser.extract_single_page(local_pdf, page_number, page_path)
@@ -111,7 +115,15 @@ class Parser:
                 text = Parser.parse_single_page(page_path)
             finally:
                 os.remove(page_path)
-            parsed.append({"id": str(uuid4()), "page_content": text, "metadata": {"page_number": page_number, "doc_id": doc_id}})
+
+            parsed.append({
+                "id": str(uuid4()),
+                "page_content": text,
+                "metadata": {"page_number": page_number, "doc_id": doc_id}
+            })
+
+            # ← Tampilkan setelah selesai parsing halaman
+            print("Done")
 
         gcs_path = f"parsed/{doc_id}.json"
         Parser._upload_to_gcs(parsed, bucket_name, gcs_path)
@@ -121,6 +133,7 @@ class Parser:
         return parsed
 
 
+
 if __name__ == "__main__":
     df = pd.read_excel("documents.xlsx")
     total = len(df)
@@ -128,7 +141,7 @@ if __name__ == "__main__":
     for idx, row in df.iterrows():
         source = row["source"]
         doc_id = str(row["doc_id"])
-        testing = bool(row.get("testing", False))
+        testing = True
         print(f"[{idx+1}/{total}] Processing doc_id={doc_id}...", end=" ")
         try:
             Parser.parse(source, doc_id, testing=testing)
