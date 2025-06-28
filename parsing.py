@@ -80,11 +80,15 @@ class Parser:
 
     @staticmethod
     def _upload_to_gcs(data: dict | list, bucket_name: str, path: str) -> None:
-        """Upload JSON-serializable object to GCS at specified path."""
+        """Upload JSON-serializable object to GCS at specified path with indent for readability."""
         client = storage.Client()
         bucket = client.bucket(bucket_name)
         blob = bucket.blob(path)
-        blob.upload_from_string(json.dumps(data), content_type="application/json")
+        # Dump JSON with indent=4
+        blob.upload_from_string(
+            json.dumps(data, indent=4),
+            content_type="application/json"
+        )
 
     @staticmethod
     def parse(source: str, doc_id: str, bucket_name: str = None, testing: bool = False) -> list[dict]:
@@ -124,7 +128,7 @@ if __name__ == "__main__":
     for idx, row in df.iterrows():
         source = row["source"]
         doc_id = str(row["doc_id"])
-        testing = True
+        testing = bool(row.get("testing", False))
         print(f"[{idx+1}/{total}] Processing doc_id={doc_id}...", end=" ")
         try:
             Parser.parse(source, doc_id, testing=testing)
