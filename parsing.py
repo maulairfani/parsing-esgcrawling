@@ -20,7 +20,7 @@ load_dotenv()
 
 class Parser:
     DEFAULT_BUCKET = os.getenv("DEFAULT_BUCKET", "cesgs-dart")
-    OCR_LANG = os.getenv("OCR_LANGUAGES", "es").split(",")
+    OCR_LANG = os.getenv("OCR_LANGUAGES", "id").split(",")
     OCR_THREADS = int(os.getenv("OCR_THREADS", "4"))
 
     @staticmethod
